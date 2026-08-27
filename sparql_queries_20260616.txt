@@ -1,0 +1,937 @@
+Sparql queries 20260616
+
+shelfMark_regex
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+  ?hold :itemOf ?instance ;
+        :heldBy <https://libris.kb.se/library/G> .
+?meta :mainEntity ?instance;
+      :controlNumber ?cn.
+  ?hold :shelfMark [ a :ShelfMark ;
+      :label ?label ] .
+FILTER (regex(?label,'ÖM', "i"))
+  
+= = = = = = = = = = = = =
+
+group_concat
+
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX : <https://id.kb.se/vocab/>
+SELECT DISTINCT ?shelf ?hold ?title (group_concat(strafter(str(?genreFormTerm), "https://id.kb.se/"); separator=" | ") as ?genreFormTerms) ?förlag WHERE {
+?hold :itemOf ?instance ;
+:hasComponent [ 
+:shelfControlNumber ?shelf ].
+?instance 
+      :publication [ 
+      #:year "2024" ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+      :label ?förlag ] ];
+     :hasTitle [ a :Title ;
+           :mainTitle ?title ];
+ :instanceOf ?work.
+
+  ?work :category ?genreFormTerm. 
+<https://id.kb.se/term/saogf/Sk%C3%B6nlitteratur> ^:broader* ?genreFormTerm
+  
+FILTER (contains(STR(?shelf),'LEVNR'))
+FILTER (contains(STR(?förlag), "Lind & Co"))
+}
+
+= = = = = = = = = = = = = = =
+
+custodialHistory_regex
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+  ?item :hasComponent [ a :Item ;
+      :heldBy <https://libris.kb.se/library/Dah> ;
+      :custodialHistory ?string ] .
+      #:custodialHistory "Zetterbergsamlingen" ;
+    FILTER (regex(?string,'Zetterbergsamlingen', "i"))
+}
+
+= = = = = = = = = = = = = = =
+
+values (list)_isbn
+
+PREFIX : <https://id.kb.se/vocab/>
+PREFIX marc: <https://id.kb.se/marc/>
+
+SELECT DISTINCT ?instance ?cn
+?isbn  {
+?instance :identifiedBy [ a :ISBN ;
+          :value ?isbn] .
+VALUES (?isbn) {('9789189740099') ('9789189713185') ('9789127180536') ('9789137507644') ('9789164208897') ('9789189722200') ('9789180064743') ('9789178093243') ('9789189199347') ('9789177956440') ('9789177959540') ('9789146240754') ('9789179495640') ('9789176456118') ('9789178133901') ('9789189772038') ('9789172266773') ('9789155271176') ('9789155271404') ('9789179793272') ('9789180088374') ('9789189777101') ('9789189777835') ('9789189697188') ('9789180770392') ('9789189697119') ('9789189750678') ('9789189750739') ('9789179792824') ('9789172475663') ('9789189585935') ('9789189696099') ('9789189065727') ('9789127461208') ('9789180022088') ('9789155272036') ('9789178873739') ('9789179652975') ('9789179653019') ('9789189243415') ('9789189079304') ('9789185359257') ('9789113066608') ('9789163866258') ('9789180378116') ('9789172266827') ('9789179777715') ('9789179792428') ('9789150225099') ('9789150225174') ('9789129741933') ('9789172266872') ('9789129742565') ('9789180374286') ('9789178135080') ('9789179792831') ('9789189784215') ('9789189784239') ('9789198746013') ('9789189777712') ('9789170894381') ('9789170894312') ('9789180770163') ('9789180770408') ('9789189095106') ('9789129742305') ('9789189362314') ('9789179774363') ('9789189405462') ('9789180088091') ('9789180089746') ('9789180770583') ('9780593157701') ('9780593158319') ('9781529150100') ('9789180378307') ('9789186503468') ('9789179792145') ('9789179793234') ('9789144172088') ('9789180770132') ('9789180770422') ('9781398830608') ('9781398830592') ('9789129486339') ('9789179493240') ('9789178133987') ('9789179791841') ('9789129735154') ('9789179792565') ('9789129742619') ('9789132216503') ('9789150225297') ('9789129742657') ('9789129742695') ('9789129743180') ('9789129743203') ('9789180638821') ('9789127178960') ('9789144171968') ('9789144172040') ('9789170894442') ('9789170894329') ('9789189750081') ('9789180530019') ('9789137157054') ('9789137504636') ('9789137506548') ('9789137506357') ('9789177956334') ('9789137158693') ('9789146240716') ('9789113128177') ('9789100803575') ('9789150225044') ('9789198617061') ('9789180632218') ('9789189750395') ('9789129743579') ('9789129742954') ('9789129743142') ('9789127184251') ('9789179790714') ('9789179793227') ('9789180089821') ('9789189777026') ('9789189777910') ('9789198791150') ('9789180770620') ('9789179876951') ('9789189405301') ('9789189526549') ('9789150122558') ('9789150122541') ('9789150225112') ('9789178133963') ('9789150224979') ('9789180185981') ('9789180186544') ('9789179790851') ('9789129742732') ('9789129742800') ('9789152750568') ('9789180580267') ('9789172266148') ('9789179791834') ('9789150224955') ('9789129739312') ('9789129741803') ('9789132216909') ('9789180731980') ('9789129742374') ('9789180372190') ('9789127179912') ('9789178135134') ('9789179777609') ('9789179757175') ('9789179771287') ('9789180086042') ('9789180089210') ('9789180088770') ('9789180089784') ('9789163889240') ('9789187465765') ('9789150119619') ('9789150121605') ('9789129722352') ('9789129740264') ('9789179790929') ('9789198761917') ('9789150225334') ('9789157033512') ('9789515258977') ('9789180376884') ('9789180376907') ('9789180377300') ('9789180377829') ('9789189751026') ('9789172266100') ('9789172266179') ('9789172266742') ('9789179756314') ('9789179790844')
+  }
+  
+?meta :mainEntity ?instance;
+:controlNumber ?cn.
+}
+
+= = = = = = = = = = = = = = = = =
+
+values (list_shorter)_isbn
+
+PREFIX : <https://id.kb.se/vocab/>
+PREFIX marc: <https://id.kb.se/marc/>
+
+SELECT DISTINCT ?instance ?cn
+?isbn  {
+?instance :identifiedBy [ a :ISBN ;
+          :value ?isbn] .
+VALUES (?isbn) {('9789189740099') ('9789189713185') ('9789127180536') ('9789137507644')
+  }
+  
+?meta :mainEntity ?instance;
+:controlNumber ?cn.
+}
+
+= = = = = = = = = = = = = = = = = 
+
+heldBy_title_metoo_regex
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://id.kb.se/vocab/>
+SELECT * WHERE {
+  ?item :itemOf ?instance;
+:heldBy <https://libris.kb.se/library/KVIN> .
+  ?instance :hasTitle [ a :Title ;
+      :hasPart [ a :TitlePart ;
+          ] ;
+    :mainTitle ?title ] .
+  FILTER (regex(?title,'metoo', "i"))
+}
+
+= = = = = = = = = = = = = = = =
+
+union_hasComponent_hasNote
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+ { ?hold :itemOf ?instance ;
+         :hasComponent [ a :Item ;
+      :heldBy <https://libris.kb.se/library/KVIN> ] .
+            ?instance :hasNote [ a :Note ;
+      :label ?label ].
+  FILTER (regex(?label,'metoo', "i"))
+}
+UNION
+{
+?hold :itemOf ?instance ;
+        :heldBy <https://libris.kb.se/library/KVIN> .
+            ?instance :hasNote [ a :Note ;
+     :label ?label ].
+  FILTER (regex(?label,'metoo', "i"))
+}
+}
+
+= = = = = = = = = = = = = = = = = = = = = = 
+
+inläs_check_date time filter
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://id.kb.se/vocab/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT * WHERE {
+  ?item :itemOf ?instance;
+        :heldBy <https://libris.kb.se/library/Kal1> .
+  ?instance :identifiedBy [ a :ISBN ;
+            :value ?string ] .
+    ?metaItem :mainEntity ?item;
+              :created ?date.
+ FILTER (xsd:dateTime(?date) > xsd:dateTime("2025-01-17T09:51:00+01:00"))
+} 
+
+= = = = = = = = = = = = = = = = = = = = =
+
+LEVRnr_year_subject_title_regex
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+  ?hold :itemOf ?instance ;
+        :hasComponent [ a :Item ;
+      :heldBy <https://libris.kb.se/library/S> ;
+      :availability <https://id.kb.se/term/enum/Delivered> ;
+      :shelfControlNumber ?string ].
+  ?instance :publication [:year "2025"] ;
+    :instanceOf [ a :Monograph ;
+    :subject <https://id.kb.se/term/sao/Personlig%20utveckling>].
+  ?instance :hasTitle [ a :Title ;
+      :mainTitle ?title ].
+    FILTER (regex(?string,'levnr', "i"))
+}
+
+= = = = = = = = = = = = = = = = = = =
+
+DDC_regex
+
+#prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT distinct ?instance ?title ?code ?edition
+WHERE
+{
+  ?instance :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+    :instanceOf ?work .
+  
+  ?work :classification [ :code ?code ;
+          a :ClassificationDdc ;
+                              :edition ?edition ] .
+#362.6*
+#FILTER (regex(str(?code), "^362\\.6", "i") )
+#362.6
+FILTER (regex(str(?code), "^362\\.6$", "i") )
+ 
+}
+
+= = = = = = = = = = = = = = = = =
+
+cxz_slå_ihop_202603
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix bulk: <https://id.kb.se/ns/bulk/>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+prefix bibdb: <https://id.kb.se/ns/bibdb/>
+
+SELECT distinct ?Comment ?instance ?cxz #(group_concat(strafter(str(?instance), "https://id.kb.se/"); separator=" | ") as ?instance)
+WHERE {
+
+?cxz a :ChangeNotice ;
+    :comment ?Comment ;
+   :concerning ?instance . 
+ 
+  { ?hold :itemOf ?instance ;
+        :heldBy ?library .     
+  }
+UNION
+ { ?hold :itemOf ?instance ;
+        :hasComponent [ a :Item ;
+        :heldBy ?library ].
+  }
+    
+  # FILTER regex(STR(?library), "https.*Li$", "i")
+    # FILTER regex(STR(?Comment), "^202\\d-\\d{2}-\\d{2}", "i")
+   FILTER regex(STR(?Comment), "^2026-04-\\d{2}", "i")
+   FILTER regex(STR(?Comment), "KB\\s.*slår?\\sihop", "i")
+ #  FILTER regex(STR(?Comment), "KB\\s.*slår?\\sihop", "i")
+
+}
+
+= = = = = = = = = = = = = = = = = =
+
+ISDS
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX : <https://id.kb.se/vocab/>
+SELECT * WHERE {
+  ?item :itemOf ?instance;
+:heldBy ?sigel .
+  ?instance #:hasTitle [ a :KeyTitle ;
+     # :mainTitle ?keyTitle ] ;
+    #:hasTitle [ a :Title ;
+      #:hasPart [ a :TitlePart ;
+       #   ] ;
+    #:mainTitle ?title ] ;
+    :identifiedBy [ a :ISSN ;
+          :value ?ISSN ] .
+  ?metaItem :mainEntity ?item;
+    :descriptionLastModifier ?lastModifier ;
+        :modified ?modDate
+  
+FILTER ( regex(str(?sigel), "isds", "i") )
+FILTER ( regex(str(?lastModifier), "https://libris.kb.se/library/ISDS", "i") )
+  FILTER ( ?modDate > "2026-04-01T00:00:00+01:00"^^xsd:dateTime )
+}
+
+= = = = = = = = = = = = = = = = = =
+
+optional_filter_orderBy (from sparql workshop)
+
+PREFIX : <https://id.kb.se/vocab/>
+PREFIX marc: <https://id.kb.se/marc/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rda: <https://id.kb.se/term/rda/>
+
+  #SELECT * {
+  SELECT ?rdaCat (count(distinct ?g) as ?count) { # (sample(?g) as ?sample) {
+
+  ?g :mainEntity ?instance ;    
+     :created ?created . FILTER (?created < "2023-01-01T00:00:00+02:00"^^xsd:dateTime ) 
+
+?instance :instanceOf ?w .
+  ?w  a :Monograph ; #:Serial 
+        :category ?rdaCat .
+?rdaCat a :ContentType . 
+
+  FILTER isIRI (?rdaCat)
+
+OPTIONAL { ?g :identifiedBy/:value ?identifier }
+
+  FILTER NOT EXISTS { ?g :bibliography [] }
+  FILTER NOT EXISTS { ?g :technicalNote/:label ?techNote  FILTER (regex(?techNote, "Huvudpost", "i" )) }
+  FILTER NOT EXISTS { ?g :descriptionCreator ?descCre  FILTER ( ?descCre = <https://libris.kb.se/library/AK> || ?descCre = <https://libris.kb.se/library/NBR>  || ?descCre = <https://libris.kb.se/library/SB17>  || ?descCre = <https://libris.kb.se/library/NBI>  || ?descCre = <https://libris.kb.se/library/SM> ) } 
+
+  FILTER NOT EXISTS { ?instance ^:itemOf ?hold  }
+  FILTER not exists { ?instance :associatedMedia []  }
+  FILTER not exists { ?instance :isPrimaryTopicOf []  }
+  FILTER not exists { ?instance marc:versionOfResource []  }
+  FILTER not exists {?instance :electronicLocator [] } 
+
+} order by desc(?count)
+
+= = = = = = = = = = = = = = = = =
+
+shelfMark_regex_heldBy_Ge
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+  ?hold :itemOf ?instance ;
+        :heldBy <https://libris.kb.se/library/Ge> .
+?meta :mainEntity ?instance;
+      :controlNumber ?cn.
+  ?hold :shelfMark [ a :ShelfMark ;
+      :label ?label ] .
+FILTER (regex(?label,'fol', "i"))
+  
+}
+
+= = = = = = = = = = = = = = = = = =
+
+shelfMark_regex
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+  
+ ?hold :hasComponent [ a :Item ;
+      :heldBy <https://libris.kb.se/library/Ge> ;
+      :shelfMark [ a :ShelfMark ;
+      :label "fol" ] ]
+  
+ # ?hold :itemOf ?instance ;
+       # :heldBy <https://libris.kb.se/library/Ge> .
+#?meta :mainEntity ?instance;
+ #     :controlNumber ?cn.
+ # ?hold :hasComponent ;
+  #  :shelfMark [ a :ShelfMark ;
+   #   :label ?label ] .
+#FILTER (regex(?label,'fol', "i"))
+  
+}
+
+= = = = = = = = = = = = = = =
+
+LEVRnr_genreForm
+
+PREFIX : <https://id.kb.se/vocab/>
+SELECT ?shelf ?hold ?title (group_concat(strafter(str(?genreFormTerm), "https://id.kb.se/"); separator=" | ") as ?genreFormTerms) ?förlag WHERE {
+?hold :itemOf ?instance ;
+:hasComponent [ 
+:shelfControlNumber ?shelf ].
+?instance 
+      :publication [ 
+      #:year "2024" ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+      :label ?förlag ] ];
+     :hasTitle [ a :Title ;
+           :mainTitle ?title ];
+ :instanceOf ?work.
+
+  ?work :category ?genreFormTerm. 
+<https://id.kb.se/term/saogf/Sk%C3%B6nlitteratur> ^:broader* ?genreFormTerm
+
+FILTER (contains(STR(?shelf),'LEVNR'))  
+FILTER (
+  CONTAINS(LCASE(STR(?förlag)), "albert bonnier") ||
+  CONTAINS(LCASE(STR(?förlag)), "norstedts")
+) 
+}
+
+= = = = = = = = = = = = = = =
+
+LEVRnr_genreForm_2
+
+PREFIX : <https://id.kb.se/vocab/>
+SELECT ?shelf ?hold ?title (group_concat(strafter(str(?genreFormTerm), "https://id.kb.se/"); separator=" | ") as ?genreFormTerms) ?förlag WHERE {
+?hold :itemOf ?instance ;
+:hasComponent [ 
+:shelfControlNumber ?shelf ].
+?instance 
+      :publication [ 
+      #:year "2024" ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+      :label ?förlag ] ];
+     :hasTitle [ a :Title ;
+           :mainTitle ?title ];
+ :instanceOf ?work.
+
+  ?work :category ?genreFormTerm. 
+<https://id.kb.se/term/saogf/Sk%C3%B6nlitteratur> ^:broader* ?genreFormTerm
+
+FILTER (contains(STR(?shelf),'LEVNR'))  
+#FILTER (
+ # CONTAINS(LCASE(STR(?förlag)), "albert bonnier") ||
+  #CONTAINS(LCASE(STR(?förlag)), "norstedts")
+  FILTER (
+    (regex(?förlag,'albert bonnier', "i")) ||
+    (regex(?förlag,'norstedts', "i"))   
+  )
+}
+
+= = = = = = = = = = = = = = = =
+
+Ljudbok_fysisk_2024
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT distinct ?instance ?cn ?bärartyp ?title ?förlag
+{
+#SELECT* WHERE {
+  ?instance a :PhysicalResource ;
+ # :hasNote [ a :Note ;
+  #    :label ?label ] ;
+      :category ?bärartyp ;
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      :category <https://id.kb.se/term/rda/SpokenWord> ] ;
+  :publication [ :year ?year ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+          :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] ;
+  :identifiedBy [ a :ISBN ;
+      :value ?ISBN ] .
+  ?meta :mainEntity ?instance;
+      :controlNumber ?cn.
+ # ?work :category <https://id.kb.se/term/rda/SpokenWord>
+  FILTER (regex(?bärartyp,'audiodisc', "i"))
+    FILTER (regex(?year,'2024', "i"))
+  #FILTER (regex(?kategori,'SpokenWord', "i"))  
+}
+
+= = = = = = = = = = = = = = = =
+
+Ljudbok_fysisk_2025
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT distinct ?instance ?cn ?bärartyp ?title ?förlag
+{
+#SELECT* WHERE {
+  ?instance a :PhysicalResource ;
+ # :hasNote [ a :Note ;
+  #    :label ?label ] ;
+      :category ?bärartyp ;
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      :category <https://id.kb.se/term/rda/SpokenWord> ];
+  :publication [ :year ?year ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+          :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] ;
+  :identifiedBy [ a :ISBN ;
+      :value ?ISBN ] .
+  ?meta :mainEntity ?instance;
+      :controlNumber ?cn
+  FILTER (regex(?bärartyp,'audiodisc', "i"))
+    FILTER (regex(?year,'2025', "i"))
+ # FILTER (regex(?label,'Ljudbok', "i"))  
+}
+
+= = = = = = = = = = = = = = = = =
+
+Ljudbok_digital_2024
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT distinct ?instance ?title
+where
+{
+#SELECT* WHERE {
+  
+  ?instance a :DigitalResource ;
+# :hasNote [ a :Note ;
+ #     :label ?label ] ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+  #:hasTitle [ a :Title ;
+   #   :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      :category <https://id.kb.se/term/rda/SpokenWord> ];
+      :publication [ :year ?year ]
+    #  a :PrimaryPublication ;
+     # :agent [ a :Agent ;
+    #  :label ?förlag ] ;
+     # :place [ a :Place ;
+      #:label ?plats ]  ;
+# :identifiedBy [ a :ISBN ;
+ #:value ?ISBN ] ].
+ # ?meta :mainEntity ?instance;
+  #    :controlNumber ?cn 
+  
+ # FILTER (regex(?bärartyp,'onlineresource', "i"))
+    FILTER (regex(?year,'2024', "i"))
+#  FILTER (regex(?label,'E-ljudbok', "i"))
+  #FILTER (regex(?verkskategori,'spokenword', "i"))
+}
+
+= = = = = = = = = = = = = = = = = = =
+
+Ljudbok_digital_2025
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+  
+  ?instance a :DigitalResource ;
+ # :hasNote [ a :Note ;
+  #    :label ?label ] ;
+      :category ?bärartyp ;
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      :category <https://id.kb.se/term/rda/SpokenWord> ];
+  :publication [ :year ?year ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+          :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] ;
+  :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  FILTER (regex(?bärartyp,'onlineresource', "i"))
+    FILTER (regex(?year,'2025', "i"))
+#  FILTER (regex(?,'E-ljudbok', "i"))
+  #FILTER (regex(?verkskategori,'spokenword', "i"))
+}
+
+= = = = = = = = = = = = = = = = =
+
+Talböcker_group_concat
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT DISTINCT ?instance ?bärartyp ?title ?förlag ?plats ?isbn ?year (group_concat(strafter(str(?genreFormTerm) #"https://id.kb.se/"); separator=" | ") as ?genreFormTerms) ?förlag ?plats ?isbn 
+      WHERE {
+  ?instance a :DigitalResource ;
+      :category ?bärartyp ;
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      :category <https://id.kb.se/term/rda/SpokenWord> ];
+  :publication [ :year ?year ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+          :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] ;
+ :identifiedBy [ a :ISBN ;
+      :value ?ISBN ] .
+     ?work :category ?genreFormTerm. 
+<https://id.kb.se/term/saogf/Talb%C3%B6cker> ^:broader* ?genreFormTerm
+    
+  FILTER (regex(?bärartyp,'onlineresource', "i"))
+    FILTER (regex(?year,'2025', "i"))
+#  FILTER (regex(?,'E-ljudbok', "i"))
+  #FILTER (regex(?verkskategori,'spokenword', "i"))
+}
+
+= = = = = = = = = = = = = = = =
+
+count_mono_year_month_orderBy
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT (COUNT(DISTINCT ?work) AS ?count) ?yearMonth (SAMPLE(?work) AS ?sample)
+WHERE {
+  ?instance :instanceOf ?work .
+  ?work a :Monograph .
+  ?admin :mainEntity ?work ;        
+         :created ?dateTime .
+  FILTER(isIRI(?work))
+  BIND(xsd:date(SUBSTR(STR(?dateTime), 1, 10)) AS ?dateOnly)
+  BIND(SUBSTR(STR(?dateOnly), 1, 7) AS ?yearMonth)
+} 
+GROUP BY ?yearMonth
+ORDER BY ?yearMonth
+
+= = = = = = = = = = = = = = = = = =
+
+spokenWord_digital_yearORdate
+
+prefix : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+
+  ?instance a :DigitalResource ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      	:category <https://id.kb.se/term/rda/SpokenWord> ];
+      	:publication [ :year|:date ?yearOrDate ;
+      	a :PrimaryPublication ;
+      	:agent [ a :Agent ;
+          :label ?förlag ] ;
+      	:place [ a :Place ;
+      	:label ?plats ] ] .
+
+  OPTIONAL { ?instance :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  }
+
+  FILTER (regex(?yearOrDate,'2025', "i"))
+  FILTER (LANG(?title) = "")
+
+}
+
+= = = = = = = = = = = = = = = = =
+
+Ljudbok_digital_optional_isbn
+
+prefix : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+
+  ?instance a :DigitalResource ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      	:category <https://id.kb.se/term/saogf/Ljudb%C3%B6cker> ];
+      	:publication [ :year|:date ?yearOrDate ;
+      	a :PrimaryPublication ;
+      	:agent [ a :Agent ;
+          :label ?förlag ] ;
+      	:place [ a :Place ;
+      	:label ?plats ] ] .
+
+  OPTIONAL { ?instance :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  }
+
+  FILTER (regex(?yearOrDate,'2025', "i"))
+  FILTER (LANG(?title) = "")
+
+}
+
+= = = = = = = = = = = = = = = = =
+
+saogf_barngf_ljudböcker_UNION
+
+prefix : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+
+  ?instance a :DigitalResource ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf _:work ;
+      :publication [ :year|:date ?yearOrDate ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+        :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] .
+
+    _:work a :Monograph .
+    { _:work :category <https://id.kb.se/term/saogf/Ljudb%C3%B6cker> .}
+        UNION
+    { _:work :category <https://id.kb.se/term/barngf/Ljudb%C3%B6cker> .}
+
+
+  OPTIONAL { ?instance :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  }
+
+  FILTER (regex(?yearOrDate,'2025', "i"))
+  FILTER (LANG(?title) = "")
+
+}
+
+= = = = = = = = = = = = = = = = = = =
+
+gf_ljudböcker_exists
+
+prefix : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+
+  ?instance a :DigitalResource ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf _:work ;
+      :publication [ :year|:date ?yearOrDate ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+        :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] .
+
+  FILTER EXISTS {
+        _:work a :Monograph .
+        { _:work :category <https://id.kb.se/term/saogf/Ljudb%C3%B6cker> .}
+        UNION
+        { _:work :category <https://id.kb.se/term/barngf/Ljudb%C3%B6cker> .}
+        }
+
+  OPTIONAL { ?instance :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  }
+
+  FILTER (regex(?yearOrDate,'2025', "i"))
+  FILTER (LANG(?title) = "")
+
+}
+
+= = = = = = = = = = = = = = = = =
+
+gf_ljudböcker_VALUES
+
+prefix : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+
+  ?instance a :DigitalResource ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf _:work ;
+      :publication [ :year|:date ?yearOrDate ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+        :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] .
+
+    _:work a :Monograph ;
+      :category ?category .
+
+    VALUES ?category {
+      <https://id.kb.se/term/saogf/Ljudb%C3%B6cker>
+      <https://id.kb.se/term/barngf/Ljudb%C3%B6cker>
+    }
+
+  OPTIONAL { ?instance :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  }
+
+  FILTER (regex(?yearOrDate,'2025', "i"))
+  FILTER (LANG(?title) = "")
+
+}
+
+= = = = = = = = = = = = = = = =
+
+gf_ljudböcker_regex_dateRangeFilter
+
+prefix : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+
+  ?instance a :DigitalResource ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf _:work ;
+      :publication [ :year|:date ?yearOrDate ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+        :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] .
+
+  FILTER EXISTS {
+        _:work a :Monograph .
+        { _:work :category <https://id.kb.se/term/saogf/Ljudb%C3%B6cker> .}
+        UNION
+        { _:work :category <https://id.kb.se/term/barngf/Ljudb%C3%B6cker> .}
+        }
+
+  OPTIONAL { ?instance :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  }
+
+  FILTER (regex(?yearOrDate,'202[4-5]'))
+  FILTER (LANG(?title) = "")
+}
+
+= = = = = = = = = = = = = = = = = = =
+
+heldBy_Jslu_Wordfinder
+
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+ ?item :itemOf ?instance ;
+:heldBy <https://libris.kb.se/library/Jslu> ;
+:associatedMedia [ :uri ?uri]  
+ 
+FILTER (regex(?uri,'^https://app.wordfinder.com', "i"))
+}
+
+#note MW: the only way I could combine "WordFinder" and heldBy Jslu, also tried a :publication…
+
+= = = = = = = = = = = = = = = = = = = = =
+

@@ -1,0 +1,12 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://id.kb.se/vocab/>
+SELECT * WHERE {
+  ?item :itemOf ?instance;
+:heldBy <https://libris.kb.se/library/KVIN> .
+  ?instance :hasTitle [ a :Title ;
+      :hasPart [ a :TitlePart ;
+          ] ;
+    :mainTitle ?title ] .
+  FILTER (regex(?title,'metoo', "i"))
+}

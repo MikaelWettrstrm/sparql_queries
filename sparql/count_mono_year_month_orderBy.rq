@@ -1,0 +1,23 @@
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT (COUNT(DISTINCT ?work) AS ?count) ?yearMonth (SAMPLE(?work) AS ?sample)
+WHERE {
+  ?instance :instanceOf ?work .
+  ?work a :Monograph .
+  ?admin :mainEntity ?work ;        
+         :created ?dateTime .
+  FILTER(isIRI(?work))
+  BIND(xsd:date(SUBSTR(STR(?dateTime), 1, 10)) AS ?dateOnly)
+  BIND(SUBSTR(STR(?dateOnly), 1, 7) AS ?yearMonth)
+} 
+GROUP BY ?yearMonth
+ORDER BY ?yearMonth

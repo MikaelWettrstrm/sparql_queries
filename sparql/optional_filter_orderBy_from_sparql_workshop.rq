@@ -1,0 +1,32 @@
+PREFIX : <https://id.kb.se/vocab/>
+PREFIX marc: <https://id.kb.se/marc/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rda: <https://id.kb.se/term/rda/>
+
+  #SELECT * {
+  SELECT ?rdaCat (count(distinct ?g) as ?count) { # (sample(?g) as ?sample) {
+
+  ?g :mainEntity ?instance ;    
+     :created ?created . FILTER (?created < "2023-01-01T00:00:00+02:00"^^xsd:dateTime ) 
+
+?instance :instanceOf ?w .
+  ?w  a :Monograph ; #:Serial 
+        :category ?rdaCat .
+?rdaCat a :ContentType . 
+
+  FILTER isIRI (?rdaCat)
+
+OPTIONAL { ?g :identifiedBy/:value ?identifier }
+
+  FILTER NOT EXISTS { ?g :bibliography [] }
+  FILTER NOT EXISTS { ?g :technicalNote/:label ?techNote  FILTER (regex(?techNote, "Huvudpost", "i" )) }
+  FILTER NOT EXISTS { ?g :descriptionCreator ?descCre  FILTER ( ?descCre = <https://libris.kb.se/library/AK> || ?descCre = <https://libris.kb.se/library/NBR>  || ?descCre = <https://libris.kb.se/library/SB17>  || ?descCre = <https://libris.kb.se/library/NBI>  || ?descCre = <https://libris.kb.se/library/SM> ) } 
+
+  FILTER NOT EXISTS { ?instance ^:itemOf ?hold  }
+  FILTER not exists { ?instance :associatedMedia []  }
+  FILTER not exists { ?instance :isPrimaryTopicOf []  }
+  FILTER not exists { ?instance marc:versionOfResource []  }
+  FILTER not exists {?instance :electronicLocator [] } 
+
+} order by desc(?count)

@@ -1,0 +1,26 @@
+prefix : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+
+  ?instance a :DigitalResource ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      	:category <https://id.kb.se/term/saogf/Ljudb%C3%B6cker> ];
+      	:publication [ :year|:date ?yearOrDate ;
+      	a :PrimaryPublication ;
+      	:agent [ a :Agent ;
+          :label ?förlag ] ;
+      	:place [ a :Place ;
+      	:label ?plats ] ] .
+
+  OPTIONAL { ?instance :identifiedBy [ a :ISBN ;
+      :value ?ISBN ]
+  }
+
+  FILTER (regex(?yearOrDate,'2025', "i"))
+  FILTER (LANG(?title) = "")
+
+}

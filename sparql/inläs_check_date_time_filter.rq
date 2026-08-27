@@ -1,0 +1,14 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX : <https://id.kb.se/vocab/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT * WHERE {
+  ?item :itemOf ?instance;
+        :heldBy <https://libris.kb.se/library/Kal1> .
+  ?instance :identifiedBy [ a :ISBN ;
+            :value ?string ] .
+    ?metaItem :mainEntity ?item;
+              :created ?date.
+ FILTER (xsd:dateTime(?date) > xsd:dateTime("2025-01-17T09:51:00+01:00"))
+}

@@ -1,0 +1,35 @@
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT DISTINCT ?instance ?bärartyp ?title ?förlag ?plats ?isbn ?year (group_concat(strafter(str(?genreFormTerm) #"https://id.kb.se/"); separator=" | ") as ?genreFormTerms) ?förlag ?plats ?isbn 
+      WHERE {
+  ?instance a :DigitalResource ;
+      :category ?bärartyp ;
+  :hasTitle [ a :Title ;
+      :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      :category <https://id.kb.se/term/rda/SpokenWord> ];
+  :publication [ :year ?year ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+          :label ?förlag ] ;
+      :place [ a :Place ;
+      :label ?plats ] ] ;
+ :identifiedBy [ a :ISBN ;
+      :value ?ISBN ] .
+     ?work :category ?genreFormTerm. 
+<https://id.kb.se/term/saogf/Talb%C3%B6cker> ^:broader* ?genreFormTerm
+    
+  FILTER (regex(?bärartyp,'onlineresource', "i"))
+    FILTER (regex(?year,'2025', "i"))
+#  FILTER (regex(?,'E-ljudbok', "i"))
+  #FILTER (regex(?verkskategori,'spokenword', "i"))
+}

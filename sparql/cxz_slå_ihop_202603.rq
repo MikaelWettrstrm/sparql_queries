@@ -1,0 +1,36 @@
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix bulk: <https://id.kb.se/ns/bulk/>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+prefix bibdb: <https://id.kb.se/ns/bibdb/>
+
+SELECT distinct ?Comment ?instance ?cxz #(group_concat(strafter(str(?instance), "https://id.kb.se/"); separator=" | ") as ?instance)
+WHERE {
+
+?cxz a :ChangeNotice ;
+    :comment ?Comment ;
+   :concerning ?instance . 
+ 
+  { ?hold :itemOf ?instance ;
+        :heldBy ?library .     
+  }
+UNION
+ { ?hold :itemOf ?instance ;
+        :hasComponent [ a :Item ;
+        :heldBy ?library ].
+  }
+    
+  # FILTER regex(STR(?library), "https.*Li$", "i")
+    # FILTER regex(STR(?Comment), "^202\\d-\\d{2}-\\d{2}", "i")
+   FILTER regex(STR(?Comment), "^2026-04-\\d{2}", "i")
+   FILTER regex(STR(?Comment), "KB\\s.*slår?\\sihop", "i")
+ #  FILTER regex(STR(?Comment), "KB\\s.*slår?\\sihop", "i")
+
+}

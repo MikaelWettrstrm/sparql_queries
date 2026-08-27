@@ -1,0 +1,27 @@
+PREFIX : <https://id.kb.se/vocab/>
+SELECT ?shelf ?hold ?title (group_concat(strafter(str(?genreFormTerm), "https://id.kb.se/"); separator=" | ") as ?genreFormTerms) ?förlag WHERE {
+?hold :itemOf ?instance ;
+:hasComponent [ 
+:shelfControlNumber ?shelf ].
+?instance 
+      :publication [ 
+      #:year "2024" ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+      :label ?förlag ] ];
+     :hasTitle [ a :Title ;
+           :mainTitle ?title ];
+ :instanceOf ?work.
+
+  ?work :category ?genreFormTerm. 
+<https://id.kb.se/term/saogf/Sk%C3%B6nlitteratur> ^:broader* ?genreFormTerm
+
+FILTER (contains(STR(?shelf),'LEVNR'))  
+#FILTER (
+ # CONTAINS(LCASE(STR(?förlag)), "albert bonnier") ||
+  #CONTAINS(LCASE(STR(?förlag)), "norstedts")
+  FILTER (
+    (regex(?förlag,'albert bonnier', "i")) ||
+    (regex(?förlag,'norstedts', "i"))   
+  )
+}

@@ -1,0 +1,18 @@
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+  ?item :hasComponent [ a :Item ;
+      :heldBy <https://libris.kb.se/library/Dah> ;
+      :custodialHistory ?string ] .
+      #:custodialHistory "Zetterbergsamlingen" ;
+    FILTER (regex(?string,'Zetterbergsamlingen', "i"))
+}

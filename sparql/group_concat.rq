@@ -1,0 +1,22 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX : <https://id.kb.se/vocab/>
+SELECT DISTINCT ?shelf ?hold ?title (group_concat(strafter(str(?genreFormTerm), "https://id.kb.se/"); separator=" | ") as ?genreFormTerms) ?förlag WHERE {
+?hold :itemOf ?instance ;
+:hasComponent [ 
+:shelfControlNumber ?shelf ].
+?instance 
+      :publication [ 
+      #:year "2024" ;
+      a :PrimaryPublication ;
+      :agent [ a :Agent ;
+      :label ?förlag ] ];
+     :hasTitle [ a :Title ;
+           :mainTitle ?title ];
+ :instanceOf ?work.
+
+  ?work :category ?genreFormTerm. 
+<https://id.kb.se/term/saogf/Sk%C3%B6nlitteratur> ^:broader* ?genreFormTerm
+  
+FILTER (contains(STR(?shelf),'LEVNR'))
+FILTER (contains(STR(?förlag), "Lind & Co"))
+}

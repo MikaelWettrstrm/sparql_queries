@@ -1,0 +1,23 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX : <https://id.kb.se/vocab/>
+SELECT * WHERE {
+  ?item :itemOf ?instance;
+:heldBy ?sigel .
+  ?instance #:hasTitle [ a :KeyTitle ;
+     # :mainTitle ?keyTitle ] ;
+    #:hasTitle [ a :Title ;
+      #:hasPart [ a :TitlePart ;
+       #   ] ;
+    #:mainTitle ?title ] ;
+    :identifiedBy [ a :ISSN ;
+          :value ?ISSN ] .
+  ?metaItem :mainEntity ?item;
+    :descriptionLastModifier ?lastModifier ;
+        :modified ?modDate
+  
+FILTER ( regex(str(?sigel), "isds", "i") )
+FILTER ( regex(str(?lastModifier), "https://libris.kb.se/library/ISDS", "i") )
+  FILTER ( ?modDate > "2026-04-01T00:00:00+01:00"^^xsd:dateTime )
+}

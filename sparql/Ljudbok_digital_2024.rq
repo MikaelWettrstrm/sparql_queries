@@ -1,0 +1,40 @@
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT distinct ?instance ?title
+where
+{
+#SELECT* WHERE {
+  
+  ?instance a :DigitalResource ;
+# :hasNote [ a :Note ;
+ #     :label ?label ] ;
+      :category <https://id.kb.se/term/rda/OnlineResource> ;
+  #:hasTitle [ a :Title ;
+   #   :mainTitle ?title ] ;
+      :instanceOf [ a :Monograph ;
+      :category <https://id.kb.se/term/rda/SpokenWord> ];
+      :publication [ :year ?year ]
+    #  a :PrimaryPublication ;
+     # :agent [ a :Agent ;
+    #  :label ?förlag ] ;
+     # :place [ a :Place ;
+      #:label ?plats ]  ;
+# :identifiedBy [ a :ISBN ;
+ #:value ?ISBN ] ].
+ # ?meta :mainEntity ?instance;
+  #    :controlNumber ?cn 
+  
+ # FILTER (regex(?bärartyp,'onlineresource', "i"))
+    FILTER (regex(?year,'2024', "i"))
+#  FILTER (regex(?label,'E-ljudbok', "i"))
+  #FILTER (regex(?verkskategori,'spokenword', "i"))
+}

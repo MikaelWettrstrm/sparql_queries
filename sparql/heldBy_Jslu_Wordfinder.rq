@@ -1,0 +1,20 @@
+prefix : <https://id.kb.se/vocab/>
+prefix fresnel: <http://www.w3.org/2004/09/fresnel#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix marc: <https://id.kb.se/marc/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix jsonld: <http://www.w3.org/ns/json-ld#>
+prefix kbv: <https://id.kb.se/vocab/>
+prefix sdo: <http://schema.org/>
+
+SELECT* WHERE {
+ ?item :itemOf ?instance ;
+:heldBy <https://libris.kb.se/library/Jslu> ;
+:associatedMedia [ :uri ?uri]  
+ 
+FILTER (regex(?uri,'^https://app.wordfinder.com', "i"))
+}
+
+#note MW: the only way I could combine "WordFinder" and heldBy Jslu, also tried a :publication…

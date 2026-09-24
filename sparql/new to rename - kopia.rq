@@ -1,0 +1,8 @@
+PREFIX : <https://id.kb.se/vocab/>
+
+SELECT * WHERE {
+   
+        ?agent a :Person;
+            :fullerFormOfName ?string
+    
+}

@@ -1,0 +1,16 @@
+PREFIX : <https://id.kb.se/vocab/>
+#aggregation: all three variables but only one result per agent
+
+SELECT ?agent
+(SAMPLE(?initials) AS ?initials)
+(SAMPLE(?string) AS ?string)
+WHERE {
+?agent :hasVariant [
+a :Person ;
+:givenName ?initials ;
+:familyName ?nameString ;
+:fullerFormOfName ?string
+] .
+FILTER(REGEX(STR(?initials), "[A-Z]\\."))
+}
+GROUP BY ?agent
